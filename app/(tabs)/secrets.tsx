@@ -1,26 +1,15 @@
-import FabMenu from '@/components/ui/FabMenu';
-import NoteEditorOverlay from '@/components/ui/NoteEditorOverlay';
-import { useTheme } from '@/hooks/ThemeContext';
-import { useFocusEffect, useNavigation } from 'expo-router';
-import { usePreventScreenCapture } from 'expo-screen-capture';
 import React, { useCallback, useEffect, useState } from 'react';
-import { AppState, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { initDB, fetchNotes, insertNotes, updateNotesDB, deleteNotesDB } from '@/util/database';
-
-type SecretNote = {
-  id: string;
-  title: string;
-  content: string;
-};
-
+import { AppState, StyleSheet, View } from 'react-native';
+import { usePreventScreenCapture } from 'expo-screen-capture';
+import { useFocusEffect } from 'expo-router';
 import PinEntryScreen from '@/components/ui/PinEntryScreen';
+import NotesListScreen from '@/components/ui/NotesListScreen';
 
 export default function SecretsScreen() {
   usePreventScreenCapture();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [appState, setAppState] = useState(AppState.currentState);
-  const { colors } = useTheme();
 
   useFocusEffect(
     useCallback(() => {
@@ -45,181 +34,21 @@ export default function SecretsScreen() {
     };
   }, []);
 
-  useEffect(() => {
-    loadData();
-  }, [isAuthenticated]);
-
-  const loadData = async () => {
-    try {
-      const data = await fetchNotes(1);
-      setSecretNotes(data);
-    } catch (e) {
-      console.error("Failed to load notes", e);
-    }
-  }
-
   // Provide a completely blank screen when the app is inactive (recent apps menu)
   if (appState !== 'active') {
     return <View style={styles.container} />;
   }
 
-  const [secretNotes, setSecretNotes] = useState<SecretNote[]>([
-    {
-      id: '1',
-      title: 'Bank Passwords',
-      content: 'Chase: 1234\nBoA: 5678',
-    },
-    {
-      id: '2',
-      title: 'Crypto Seed Phrase',
-      content: 'apple banana cherry dog elephant fox grape hat ice jelly kite lemon',
-    },
-    {
-      id: '3',
-      title: 'Private Journal',
-      content: 'Today was a productive day. I finally managed to finish that app I was working on.',
-    },
-  ]);
-
-  const navigation = useNavigation();
-  const [selectedNote, setSelectedNote] = useState<SecretNote | null>(null);
-
-  useEffect(() => {
-    navigation.setOptions({
-      tabBarStyle: selectedNote ? { display: 'none' } : {
-        backgroundColor: colors.card,
-        borderTopColor: colors.border,
-      },
-    });
-  }, [selectedNote, navigation, colors]);
-
-  const [editTitle, setEditTitle] = useState('');
-  const [editContent, setEditContent] = useState('');
-
-  const handleOpenNote = (note: SecretNote) => {
-    setEditTitle(note.title);
-    setEditContent(note.content);
-    setSelectedNote(note);
-  };
-
-  const handleNewNote = () => {
-    const newNote = {
-      id: Date.now().toString(),
-      title: '',
-      content: '',
-    };
-    handleOpenNote(newNote);
-  };
-
-  const handleCloseNote = async () => {
-      if (!selectedNote) return;
-      const exists = secretNotes.some((n) => n.id === selectedNote.id);
-      const isBlank = !editTitle.trim() && !editContent.trim();
-      if (exists) {
-        if (isBlank) {
-          await deleteNotesDB(selectedNote.id);
-        } 
-        await updateNotesDB(selectedNote.id, editTitle, editContent);
-      } else {
-        if (!isBlank) {
-          await insertNotes(editTitle, editContent, 1);
-        } 
-      }
-      loadData();
-      setSelectedNote(null);
-  };
-
-  const renderNote = ({ item }: { item: SecretNote }) => {
-    return (
-      <TouchableOpacity activeOpacity={0.8} style={styles.noteTile} onPress={() => handleOpenNote(item)}>
-        <Text style={styles.noteTitle} numberOfLines={1}>
-          {item.title}
-        </Text>
-        <Text style={styles.noteContent} numberOfLines={6}>
-          {item.content}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
   if (!isAuthenticated) {
     return <PinEntryScreen onUnlock={() => setIsAuthenticated(true)} />;
   }
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={[styles.appTitle, { color: colors.text }]}>Secrets</Text>
-      </View>
-
-      <FlatList
-        data={secretNotes}
-        keyExtractor={(item) => item.id}
-        renderItem={renderNote}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
-
-      {/* Fab Menu */}
-      <FabMenu onNewNote={handleNewNote} />
-
-      {/* Full Screen Editable Secret Overlay */}
-      <NoteEditorOverlay
-        selectedNote={selectedNote}
-        editTitle={editTitle}
-        setEditTitle={setEditTitle}
-        editContent={editContent}
-        setEditContent={setEditContent}
-        onClose={handleCloseNote}
-        contentPlaceholder="Secret Content"
-      />
-    </View>
-  );
+  return <NotesListScreen title="Secrets" isSecret={true} contentPlaceholder="Secret Content" />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
-  },
-  header: {
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 16,
-  },
-  appTitle: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#ffffff',
-  },
-  listContent: {
-    paddingHorizontal: 10,
-    paddingBottom: 20,
-  },
-  row: {
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  noteTile: {
-    flex: 1,
-    marginHorizontal: 6,
-    borderRadius: 14,
-    padding: 12,
-    backgroundColor: '#1f1f1f',
-    borderWidth: 1,
-    borderColor: '#2c2c2c',
-  },
-  noteTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#ffffff',
-    marginBottom: 6,
-  },
-  noteContent: {
-    fontSize: 14,
-    color: '#d0d0d0',
-    lineHeight: 20,
   },
 });
