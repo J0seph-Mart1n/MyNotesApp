@@ -1,6 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/hooks/ThemeContext';
-import React, { useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const SECRET_PIN = '1234'; // Default PIN
@@ -44,26 +44,26 @@ export default function PinEntryScreen({ onUnlock }: PinEntryScreenProps) {
   return (
     <View style={styles.container}>
       <Text style={[styles.appTitle, { color: colors.text }]}>Enter PIN</Text>
-      
+
       {/* Visual Dots for PIN length */}
       <View style={styles.dotsContainer}>
         {[...Array(PIN_LENGTH)].map((_, i) => {
           const isFilled = i < pinInput.length;
           return (
-            <View 
-              key={i} 
+            <View
+              key={i}
               style={[
-                styles.dot, 
-                { 
-                  backgroundColor: isFilled ? colors.text : 'transparent', 
-                  borderColor: colors.text 
+                styles.dot,
+                {
+                  backgroundColor: isFilled ? colors.text : 'transparent',
+                  borderColor: colors.text
                 }
-              ]} 
+              ]}
             />
           );
         })}
       </View>
-      
+
       {/* Error Message or Spacer */}
       {error ? (
         <Text style={styles.errorText}>{error}</Text>
@@ -74,27 +74,27 @@ export default function PinEntryScreen({ onUnlock }: PinEntryScreenProps) {
       {/* Numpad Grid */}
       <View style={styles.numpadContainer}>
         {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((num) => (
-          <TouchableOpacity 
-            key={num} 
-            style={styles.numButton} 
+          <TouchableOpacity
+            key={num}
+            style={styles.numButton}
             activeOpacity={0.7}
             onPress={() => handlePress(num)}
           >
             <Text style={[styles.numText, { color: colors.text }]}>{num}</Text>
           </TouchableOpacity>
         ))}
-        
+
         {/* Bottom Row */}
         <View style={[styles.numButton, { backgroundColor: 'transparent', borderWidth: 0 }]} />
-        <TouchableOpacity 
-          style={styles.numButton} 
+        <TouchableOpacity
+          style={styles.numButton}
           activeOpacity={0.7}
           onPress={() => handlePress('0')}
         >
           <Text style={[styles.numText, { color: colors.text }]}>0</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.numButton, { backgroundColor: 'transparent', borderWidth: 0 }]} 
+        <TouchableOpacity
+          style={[styles.numButton, { backgroundColor: 'transparent', borderWidth: 0 }]}
           activeOpacity={0.7}
           onPress={handleDelete}
         >

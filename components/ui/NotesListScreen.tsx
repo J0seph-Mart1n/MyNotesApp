@@ -1,11 +1,11 @@
 import FabMenu from '@/components/ui/FabMenu';
-import NoteEditorOverlay from '@/components/ui/NoteEditorOverlay';
 import ListEditorOverlay from '@/components/ui/ListEditorOverlay';
+import NoteEditorOverlay from '@/components/ui/NoteEditorOverlay';
 import { useTheme } from '@/hooks/ThemeContext';
-import { useNavigation, useFocusEffect } from 'expo-router';
-import React, { useEffect, useState, useCallback } from 'react';
+import { deleteNotesDB, fetchNotes, insertNotes, updateNotesDB } from '@/util/database';
+import { useFocusEffect, useNavigation } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { fetchNotes, insertNotes, updateNotesDB, deleteNotesDB } from '@/util/database';
 
 type TaskItem = {
   id: string;
@@ -50,7 +50,7 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
   const loadData = async () => {
     try {
       const data = await fetchNotes(isSecret ? 1 : 0);
-      setNotes(data as Note[]); 
+      setNotes(data as Note[]);
     } catch (e) {
       console.error("Failed to load notes", e);
     }
@@ -77,18 +77,18 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
   };
 
   const handleNewListNote = () => {
-    handleOpenNote({ id: Date.now().toString(), title: '', content: [{id: Date.now().toString(), text: '', isCompleted: false}], isList: true });
+    handleOpenNote({ id: Date.now().toString(), title: '', content: [{ id: Date.now().toString(), text: '', isCompleted: false }], isList: true });
   };
 
   const handleCloseNote = async () => {
     if (!selectedNote) return;
     const exists = notes.some((n) => n.id === selectedNote.id);
-    
+
     const isBlankText = !selectedNote.isList && !editTitle.trim() && !editContent.trim();
-    
+
     // Clean up completely empty task rows before saving
     const validTasks = editTasks.filter(task => task.text.trim().length > 0);
-    
+
     const isBlankList = selectedNote.isList && !editTitle.trim() && validTasks.length === 0;
     const isBlank = isBlankText || isBlankList;
 
@@ -104,7 +104,7 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     } else {
       if (!isBlank) {
         await insertNotes(editTitle, finalBody, isSecret ? 1 : 0, finalIsList);
-      } 
+      }
     }
     loadData();
     setSelectedNote(null);

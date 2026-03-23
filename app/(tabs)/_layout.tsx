@@ -1,8 +1,8 @@
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useTheme } from '@/hooks/ThemeContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Tabs } from 'expo-router';
 import { initDB } from '@/util/database';
+import { Tabs } from 'expo-router';
 import React, { useEffect } from 'react';
 
 export default function TabLayout() {

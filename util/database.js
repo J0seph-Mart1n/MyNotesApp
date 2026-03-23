@@ -50,7 +50,7 @@ export const fetchNotes = async (isSecret = 0) => {
     return allRows.map(row => {
       let parsedContent = row.body;
       if (row.is_list && typeof row.body === 'string') {
-        try { parsedContent = JSON.parse(row.body); } catch(e) {}
+        try { parsedContent = JSON.parse(row.body); } catch (e) { }
       }
       return {
         id: row.id.toString(),
@@ -85,7 +85,7 @@ export const deleteNotesDB = async (id) => {
       [id]
     );
     // Return updated list so UI can refresh easily
-    return await fetchNotes(); 
+    return await fetchNotes();
   } catch (error) {
     console.error("Error deleting notes:", error);
     return [];
