@@ -23,6 +23,11 @@ export default function NoteEditorOverlay({
   contentPlaceholder = 'Note',
 }: NoteEditorOverlayProps) {
   const openAnimation = useRef(new Animated.Value(0)).current;
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (selectedNote) {
@@ -56,7 +61,7 @@ export default function NoteEditorOverlay({
       useNativeDriver: true,
     }).start(({ finished }) => {
       if (finished) {
-        onClose();
+        onCloseRef.current();
       }
     });
   };

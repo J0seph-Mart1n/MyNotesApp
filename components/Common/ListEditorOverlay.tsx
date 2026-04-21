@@ -29,6 +29,11 @@ export default function ListNoteOverlay({
 }: ListNoteOverlayProps) {
     const openAnimation = useRef(new Animated.Value(0)).current;
     const { colors } = useTheme();
+    
+    const onCloseRef = useRef(onClose);
+    useEffect(() => {
+        onCloseRef.current = onClose;
+    }, [onClose]);
 
     // Animation to popup the screen smoothly
     useEffect(() => {
@@ -48,7 +53,7 @@ export default function ListNoteOverlay({
             duration: 200,
             useNativeDriver: true,
         }).start(({ finished }) => {
-            if (finished) onClose();
+            if (finished) onCloseRef.current();
         });
     };
 
