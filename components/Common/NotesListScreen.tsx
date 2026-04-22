@@ -4,7 +4,7 @@ import NoteEditorOverlay from '@/components/Common/NoteEditorOverlay';
 import { useTheme } from '@/hooks/ThemeContext';
 import { useFocusEffect, useNavigation } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SelectedNote from './SelectedNote';
@@ -58,6 +58,9 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     return false;
   });
 
+  const pinnedNotes = filteredNotes.filter(n => n.isPinned);
+  const otherNotes = filteredNotes.filter(n => !n.isPinned);
+
   const isPinAction = !selectedNoteIds.every(id => notes.find(n => n.id === id)?.isPinned);
 
   useEffect(() => {
@@ -75,7 +78,7 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     }, [isSecret])
   );
 
-  const renderNote = ({ item }: { item: Note }) => {
+  const renderNoteCard = (item: Note) => {
     let previewContent = '';
     if (item.isList && Array.isArray(item.content)) {
       // Create a nice preview of the checklist items
@@ -87,14 +90,16 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     const isSelected = selectedNoteIds.includes(item.id);
 
     return (
-      <NoteRender
-        item={item}
-        isSelected={isSelected}
-        colors={colors}
-        handleOpenNote={handleOpenNote}
-        toggleSelection={toggleSelection}
-        previewContent={previewContent}
-      />
+      <View key={item.id} style={styles.gridItem}>
+        <NoteRender
+          item={item}
+          isSelected={isSelected}
+          colors={colors}
+          handleOpenNote={handleOpenNote}
+          toggleSelection={toggleSelection}
+          previewContent={previewContent}
+        />
+      </View>
     );
   };
 
@@ -129,15 +134,31 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
         )}
       </View>
 
-      <FlatList
-        data={filteredNotes}
-        keyExtractor={(item) => item.id}
-        renderItem={renderNote}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView contentContainerStyle={styles.listContent} showsVerticalScrollIndicator={false}>
+        {pinnedNotes.length > 0 && (
+          <View style={styles.sectionContainer}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Pinned</Text>
+            <View style={styles.gridContainer}>
+              {pinnedNotes.map(renderNoteCard)}
+            </View>
+          </View>
+        )}
+
+        {otherNotes.length > 0 && (
+          <View style={styles.sectionContainer}>
+            {pinnedNotes.length > 0 && ( // Only show "Others" title if there are pinned notes to separate them from
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Others</Text>
+            )}
+            <View style={styles.gridContainer}>
+              {otherNotes.map(renderNoteCard)}
+            </View>
+          </View>
+        )}
+        
+        {filteredNotes.length === 0 && (
+            <Text style={[styles.emptyText, { color: colors.subText }]}>No notes found.</Text>
+        )}
+      </ScrollView>
 
       <FabMenu onNewNote={handleNewTextNote} onNewListNote={handleNewListNote} />
 
@@ -187,10 +208,30 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 10,
-    paddingBottom: 20,
+    paddingBottom: 80,
   },
-  row: {
-    justifyContent: 'space-between',
+  sectionContainer: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    letterSpacing: 1.2,
+    marginLeft: 12,
     marginBottom: 12,
+    opacity: 0.8,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    marginBottom: 12,
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 40,
+    fontSize: 16,
   },
 });

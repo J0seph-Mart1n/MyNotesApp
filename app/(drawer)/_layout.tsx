@@ -1,4 +1,5 @@
 import { IconSymbol } from '@/components/icon-symbol';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useTheme } from '@/hooks/ThemeContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { initDB } from '@/constants/database';
@@ -55,8 +56,8 @@ export default function TabLayout() {
       <Drawer.Screen
         name="diary"
         options={{
-          title: 'Diary',
-          drawerIcon: ({ color }) => <IconSymbol size={28} name="lock.fill" color={color} />,
+          title: ' Diary',
+          drawerIcon: ({ color }) => <MaterialIcons name="library-books" size={26} color={color} />,
         }}
       />
     </Drawer>

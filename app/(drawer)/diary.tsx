@@ -156,14 +156,11 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   entryCard: {
-    backgroundColor: DiaryColors.surfaceContainerLowest,
+    backgroundColor: '#1f1f1f',
+    borderColor: '#2c2c2c',
+    borderWidth: 1,
     borderRadius: 24,
     padding: 24,
-    shadowColor: '#2f2f2e',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.04,
-    shadowRadius: 20,
-    elevation: 3,
   },
   entryHeader: {
     flexDirection: 'row',
@@ -179,17 +176,17 @@ const styles = StyleSheet.create({
   entryTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: DiaryColors.onSurface,
+    color: '#ffffff',
     marginBottom: 4,
   },
   entryDate: {
     fontSize: 13,
-    color: DiaryColors.onSurfaceVariant,
+    color: '#a0a0a0',
   },
   entrySnippet: {
     fontSize: 15,
     lineHeight: 24,
-    color: DiaryColors.onSurfaceVariant,
+    color: '#d0d0d0',
     marginBottom: 8,
   },
 });
