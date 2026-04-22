@@ -36,6 +36,7 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     loadData,
     toggleSelection,
     handleDeleteSelected,
+    handlePinSelected,
     handleOpenNote,
     handleNewTextNote,
     handleNewListNote,
@@ -56,6 +57,8 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
     }
     return false;
   });
+
+  const isPinAction = !selectedNoteIds.every(id => notes.find(n => n.id === id)?.isPinned);
 
   useEffect(() => {
     navigation.setOptions({
@@ -98,7 +101,14 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
   return (
     <SafeAreaView style={styles.container}>
       {selectedNoteIds.length > 0 ? (
-        <SelectedNote selectedNoteIds={selectedNoteIds} colors={colors} handleDeleteSelected={handleDeleteSelected} setSelectedNoteIds={setSelectedNoteIds} />
+        <SelectedNote 
+          selectedNoteIds={selectedNoteIds} 
+          colors={colors} 
+          handleDeleteSelected={handleDeleteSelected} 
+          setSelectedNoteIds={setSelectedNoteIds}
+          handlePinSelected={handlePinSelected}
+          isPinAction={isPinAction}
+        />
       ) : (
         <PageHeader title={title} navigation={navigation} />
       )}

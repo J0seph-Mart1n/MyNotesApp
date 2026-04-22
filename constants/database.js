@@ -14,6 +14,7 @@ export const initDB = async () => {
         title TEXT,
         body TEXT,
         is_list INTEGER DEFAULT 0,
+        is_pinned INTEGER DEFAULT 0,
         created_at TEXT NOT NULL,
         is_secret INTEGER DEFAULT 0
       );
@@ -55,7 +56,7 @@ export const insertNotes = async (title, body, isSecret = 0, isList = 0) => {
 export const fetchNotes = async (isSecret = 0) => {
   try {
     const allRows = await db.getAllAsync(
-      'SELECT * FROM notes WHERE is_secret = ? ORDER BY created_at DESC',
+      'SELECT * FROM notes WHERE is_secret = ? ORDER BY is_pinned DESC, created_at DESC',
       [isSecret ? 1 : 0]
     );
     // Map the SQLite 'body' column to the 'content' expected by the UI, and ensure ID is a string
@@ -68,7 +69,8 @@ export const fetchNotes = async (isSecret = 0) => {
         id: row.id.toString(),
         title: row.title,
         content: parsedContent,
-        isList: Boolean(row.is_list)
+        isList: Boolean(row.is_list),
+        isPinned: Boolean(row.is_pinned)
       };
     });
   } catch (error) {
@@ -101,6 +103,18 @@ export const deleteNotesDB = async (id) => {
   } catch (error) {
     console.error("Error deleting notes:", error);
     return [];
+  }
+};
+
+// 6. Update Pin Status
+export const updateNotePinStatusDB = async (id, isPinned) => {
+  try {
+    await db.runAsync(
+      'UPDATE notes SET is_pinned = ? WHERE id = ?',
+      [isPinned ? 1 : 0, id]
+    );
+  } catch (error) {
+    console.error("Error updating pin notes:", error);
   }
 };
 

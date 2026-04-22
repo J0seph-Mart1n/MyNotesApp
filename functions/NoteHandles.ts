@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { deleteNotesDB, insertNotes, updateNotesDB, fetchNotes } from '@/constants/database';
+import { deleteNotesDB, insertNotes, updateNotesDB, fetchNotes, updateNotePinStatusDB } from '@/constants/database';
 
 export type TaskItem = {
   id: string;
@@ -12,6 +12,7 @@ export type Note = {
   title: string;
   content: string | TaskItem[];
   isList: boolean;
+  isPinned?: boolean;
 };
 
 export function useNoteHandles(isSecret: boolean) {
@@ -40,6 +41,14 @@ export function useNoteHandles(isSecret: boolean) {
 
   const handleDeleteSelected = async () => {
     await Promise.all(selectedNoteIds.map(id => deleteNotesDB(id)));
+    setSelectedNoteIds([]);
+    loadData();
+  };
+
+  const handlePinSelected = async () => {
+    const allPinned = selectedNoteIds.every(id => notes.find(n => n.id === id)?.isPinned);
+    const targetPinStatus = !allPinned; // If ANY are unpinned, pin them all. Only UNPIN if ALL are already pinned.
+    await Promise.all(selectedNoteIds.map(id => updateNotePinStatusDB(id, targetPinStatus)));
     setSelectedNoteIds([]);
     loadData();
   };
@@ -111,6 +120,7 @@ export function useNoteHandles(isSecret: boolean) {
     loadData,
     toggleSelection,
     handleDeleteSelected,
+    handlePinSelected,
     handleOpenNote,
     handleNewTextNote,
     handleNewListNote,

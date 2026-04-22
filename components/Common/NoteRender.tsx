@@ -1,6 +1,8 @@
 import React from 'react';
 import { Note } from "@/functions/NoteHandles";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 interface NoteRenderProps {
     item: Note;
@@ -22,9 +24,12 @@ export default function NoteRender({ item, isSelected, colors, handleOpenNote, t
             onPress={() => handleOpenNote(item)}
             onLongPress={() => toggleSelection(item.id)}
         >
-            <Text style={styles.noteTitle} numberOfLines={1}>
-                {item.title}
-            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Text style={[styles.noteTitle, { flex: 1 }]} numberOfLines={1}>
+                    {item.title}
+                </Text>
+                {item.isPinned && <MaterialCommunityIcons name="pin" size={16} color={colors.text} style={{ marginLeft: 8 }} />}
+            </View>
             <Text style={styles.noteContent} numberOfLines={6}>
                 {previewContent}
             </Text>
