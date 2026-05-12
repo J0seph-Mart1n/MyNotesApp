@@ -1,50 +1,51 @@
-# Welcome to your Expo app 👋
+# MyNotesApp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MyNotesApp is a React Native journaling and note-taking application built with Expo. It provides a robust and modernized interface for managing your daily notes and diary entries with local data persistence.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Expo SDK 55**: Modernized and built on the latest Expo framework.
+- **Local Persistence**: Powered by SQLite (`expo-sqlite`) for secure and reliable on-device storage.
+- **Drawer Navigation**: Implemented robust and standardized side-drawer navigation using `@react-navigation/drawer` and `expo-router`.
+- **Note Management**:
+  - Pinned and unpinned note sections.
+  - Multi-selection long-press deletion.
+  - Consistent data management across text and list-based journal entries.
+- **Native UI Components**: Incorporates `@react-native-community/datetimepicker` for a native date-picking experience.
+
+## Get Started
+
+1. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. **Start the app**
 
    ```bash
-   npx expo start
+   npm run start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Run on specific platforms**
+   - Android: `npm run android`
+   - iOS: `npm run ios`
+   - Web: `npm run web`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Tech Stack
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- [Expo](https://expo.dev/) (SDK 55)
+- [React Native](https://reactnative.dev/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [Expo SQLite](https://docs.expo.dev/versions/latest/sdk/sqlite/)
+- [React Navigation](https://reactnavigation.org/)
+- [Reanimated](https://docs.swmansion.com/react-native-reanimated/) & [Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)
 
-## Get a fresh project
+## Project Structure
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- `/app`: Contains file-based routing and main screens for the application.
+- `/components`: Reusable UI components.
+- `/constants`: Global constants and configurations.
+- `/hooks`: Custom React hooks.
+- `/scripts`: Utility scripts.
+- `/assets`: Images, fonts, and other static assets.

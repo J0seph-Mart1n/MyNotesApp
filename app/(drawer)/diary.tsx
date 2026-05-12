@@ -64,8 +64,8 @@ export default function DiaryScreen() {
       {/* Sticky Top Gradient Header */}
       <PageHeader title="Diary" navigation={navigation} />
 
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent} 
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Calendar Section */}

@@ -106,10 +106,10 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
   return (
     <SafeAreaView style={styles.container}>
       {selectedNoteIds.length > 0 ? (
-        <SelectedNote 
-          selectedNoteIds={selectedNoteIds} 
-          colors={colors} 
-          handleDeleteSelected={handleDeleteSelected} 
+        <SelectedNote
+          selectedNoteIds={selectedNoteIds}
+          colors={colors}
+          handleDeleteSelected={handleDeleteSelected}
           setSelectedNoteIds={setSelectedNoteIds}
           handlePinSelected={handlePinSelected}
           isPinAction={isPinAction}
@@ -154,9 +154,9 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
             </View>
           </View>
         )}
-        
+
         {filteredNotes.length === 0 && (
-            <Text style={[styles.emptyText, { color: colors.subText }]}>No notes found.</Text>
+          <Text style={[styles.emptyText, { color: colors.subText }]}>No notes found.</Text>
         )}
       </ScrollView>
 
