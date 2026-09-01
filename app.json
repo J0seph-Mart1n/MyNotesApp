@@ -22,7 +22,8 @@
         "backgroundColor": "#121212"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.SecretNotes"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +39,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "e4c971ef-de90-4b1c-bcb1-92dafb3bea7d"
+      }
     }
   }
 }
