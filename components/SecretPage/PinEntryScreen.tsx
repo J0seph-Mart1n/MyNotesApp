@@ -5,15 +5,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PageHeader from '../Common/PageHeader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native';
 
-const SECRET_PIN = '1234'; // Default PIN
 const PIN_LENGTH = 4;
 
 type PinEntryScreenProps = {
+  actualPin: string;
   onUnlock: () => void;
+  onForgotPin: () => void;
 };
 
-export default function PinEntryScreen({ onUnlock }: PinEntryScreenProps) {
+export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin }: PinEntryScreenProps) {
   const [pinInput, setPinInput] = useState('');
   const [error, setError] = useState('');
   const { colors } = useTheme();
@@ -22,7 +25,7 @@ export default function PinEntryScreen({ onUnlock }: PinEntryScreenProps) {
   // Automatically check PIN when it reaches the required length
   useEffect(() => {
     if (pinInput.length === PIN_LENGTH) {
-      if (pinInput === SECRET_PIN) {
+      if (pinInput === actualPin) {
         setError('');
         onUnlock(); // Success!
       } else {
@@ -108,6 +111,17 @@ export default function PinEntryScreen({ onUnlock }: PinEntryScreenProps) {
           <Ionicons name="backspace-outline" size={32} color={colors.text} />
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity onPress={onForgotPin} style={styles.forgotButton}>
+        <Text style={[styles.forgotButtonText, { color: colors.text }]}>Forgot PIN?</Text>
+      </TouchableOpacity>
+      <Button 
+        title="Clear Storage (Dev Only)" 
+        onPress={async () => {
+          await AsyncStorage.clear();
+          alert('Storage Cleared! Please restart the app.');
+        }} 
+      />
       </View>
     </SafeAreaView>
   );
@@ -189,5 +203,14 @@ const styles = StyleSheet.create({
   spacerText: {
     height: 20,
     marginBottom: 30,
+  },
+  forgotButton: {
+    marginTop: 40,
+    padding: 10,
+  },
+  forgotButtonText: {
+    fontSize: 16,
+    textDecorationLine: 'underline',
+    opacity: 0.8,
   },
 });
