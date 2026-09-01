@@ -10,13 +10,14 @@ import { Button } from 'react-native';
 
 const PIN_LENGTH = 4;
 
-type PinEntryScreenProps = {
+interface PinEntryProps {
   actualPin: string;
   onUnlock: () => void;
   onForgotPin: () => void;
-};
+  title: string;
+}
 
-export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin }: PinEntryScreenProps) {
+export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title }: PinEntryProps) {
   const [pinInput, setPinInput] = useState('');
   const [error, setError] = useState('');
   const { colors } = useTheme();
@@ -50,7 +51,7 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin }: Pin
 
   return (
     <SafeAreaView style={styles.container}>
-      <PageHeader title="Secrets" navigation={navigation}/>
+      <PageHeader title={title} navigation={navigation}/>
 
       <View style={styles.contentContainer}>
         <Text style={[styles.promptTitle, { color: colors.text }]}>Enter PIN</Text>
@@ -115,13 +116,6 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin }: Pin
       <TouchableOpacity onPress={onForgotPin} style={styles.forgotButton}>
         <Text style={[styles.forgotButtonText, { color: colors.text }]}>Forgot PIN?</Text>
       </TouchableOpacity>
-      <Button 
-        title="Clear Storage (Dev Only)" 
-        onPress={async () => {
-          await AsyncStorage.clear();
-          alert('Storage Cleared! Please restart the app.');
-        }} 
-      />
       </View>
     </SafeAreaView>
   );

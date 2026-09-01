@@ -20,6 +20,7 @@ import CalenderPicker from '@/components/DiaryPage/CalenderPicker';
 import { useDiaryHandles, DiaryEntry } from '@/functions/DiaryHandles';
 import NoteEditorOverlay from '@/components/Common/NoteEditorOverlay';
 import ListEditorOverlay from '@/components/Common/ListEditorOverlay';
+import PinProtectedScreen from '@/components/SecretPage/PinProtectedScreen';
 
 export default function DiaryScreen() {
   const { width } = useWindowDimensions();
@@ -58,7 +59,8 @@ export default function DiaryScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <PinProtectedScreen title="Diary">
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
       {/* Sticky Top Gradient Header */}
@@ -136,6 +138,7 @@ export default function DiaryScreen() {
         onClose={handleCloseNote}
       />
     </SafeAreaView>
+    </PinProtectedScreen>
   );
 }
 
