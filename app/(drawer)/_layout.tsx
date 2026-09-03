@@ -60,6 +60,13 @@ export default function TabLayout() {
           drawerIcon: ({ color }) => <MaterialIcons name="library-books" size={26} color={color} />,
         }}
       />
+      <Drawer.Screen
+        name="chatbot"
+        options={{
+          title: ' AI Chatbot',
+          drawerIcon: ({ color }) => <MaterialIcons name="smart-toy" size={26} color={color} />,
+        }}
+      />
     </Drawer>
   );
 }

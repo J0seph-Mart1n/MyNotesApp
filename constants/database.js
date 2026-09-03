@@ -173,6 +173,32 @@ export const fetchDiaryEntries = async (date) => {
   }
 };
 
+// Fetch all diary entries across all dates
+export const fetchAllDiaryEntries = async () => {
+  try {
+    const rows = await db.getAllAsync(
+      'SELECT * FROM diary_entries ORDER BY created_at DESC'
+    );
+    return rows.map(row => {
+      let parsedContent = row.body;
+      if (row.is_list && typeof row.body === 'string') {
+        try { parsedContent = JSON.parse(row.body); } catch (e) { }
+      }
+      return {
+        id: row.id.toString(),
+        entryDate: row.entry_date,
+        title: row.title,
+        content: parsedContent,
+        isList: Boolean(row.is_list),
+        createdAt: row.created_at,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching all diary entries:", error);
+    return [];
+  }
+};
+
 // Update a diary entry
 export const updateDiaryEntry = async (id, title, body, isList = 0) => {
   try {

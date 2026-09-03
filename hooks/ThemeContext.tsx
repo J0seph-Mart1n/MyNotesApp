@@ -47,7 +47,7 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const systemScheme = useColorScheme(); // 'light' or 'dark' from phone settings
+  const systemScheme = useColorScheme() as 'light' | 'dark' | null;
   const [theme, setTheme] = useState<ThemeMode>(systemScheme || 'light');
 
   // Load saved preference on startup
