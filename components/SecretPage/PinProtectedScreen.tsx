@@ -5,6 +5,7 @@ import PinEntryScreen from '@/components/SecretPage/PinEntryScreen';
 import PinSetupScreen from '@/components/SecretPage/PinSetupScreen';
 import RecoveryPinDisplayScreen from '@/components/SecretPage/RecoveryPinDisplayScreen';
 import ForgotPinScreen from '@/components/SecretPage/ForgotPinScreen';
+import { useTheme } from '@/hooks/ThemeContext';
 
 interface PinProtectedScreenProps {
   children: React.ReactNode;
@@ -13,9 +14,10 @@ interface PinProtectedScreenProps {
 
 export default function PinProtectedScreen({ children, title }: PinProtectedScreenProps) {
   const { authState, setAuthState, actualPin, setActualPin, pinToSave, setPinToSave } = usePinAuth();
+  const { colors } = useTheme();
 
   if (authState === 'loading') {
-    return <View style={styles.container} />;
+    return <View style={[styles.container, { backgroundColor: colors.background }]} />;
   }
 
   if (authState === 'setup') {
@@ -68,6 +70,5 @@ export default function PinProtectedScreen({ children, title }: PinProtectedScre
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
 });

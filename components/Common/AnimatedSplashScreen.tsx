@@ -10,6 +10,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import * as SplashScreen from 'expo-splash-screen';
+import { useTheme } from '@/hooks/ThemeContext';
 
 type AnimatedSplashScreenProps = {
   onAnimationComplete: () => void;
@@ -21,6 +22,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 });
 
 export default function AnimatedSplashScreen({ onAnimationComplete }: AnimatedSplashScreenProps) {
+  const { colors } = useTheme();
   const containerOpacity = useSharedValue(1);
   const logoScale = useSharedValue(1);
   const logoOpacity = useSharedValue(1);
@@ -75,7 +77,7 @@ export default function AnimatedSplashScreen({ onAnimationComplete }: AnimatedSp
   });
 
   return (
-    <Animated.View style={[styles.container, animatedContainerStyle]}>
+    <Animated.View style={[styles.container, animatedContainerStyle, { backgroundColor: colors.background }]}>
       <Animated.Image
         source={require('../../assets/images/custom-splash.jpg')}
         style={[styles.image, animatedLogoStyle]}
@@ -88,7 +90,6 @@ export default function AnimatedSplashScreen({ onAnimationComplete }: AnimatedSp
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#121212',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 9999, // Ensure it sits on top of everything while animating

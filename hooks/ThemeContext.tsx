@@ -5,16 +5,16 @@ import { StatusBar } from 'expo-status-bar';
 // Define the colors for Light and Dark modes
 export const themeColors = {
   light: {
-    background: '#e3e3e3',
-    card: '#FFFFFF',
-    text: '#333333',
+    background: '#EAEAEA',
+    card: '#F5F5F5',
+    text: '#2C2C2E',
     subText: '#666666',
-    border: '#E0E0E0',
+    border: '#D1D1D6',
     tint: '#007AFF',
-    inputBg: '#FFFFFF',
-    modalBg: '#FFFFFF',
-    placeholder: '#888888',
-    green: '#41b699',
+    inputBg: '#F5F5F5',
+    modalBg: '#F5F5F5',
+    placeholder: '#8E8E93',
+    green: '#3BA78F',
     saveBtn: '#121212'
   },
   dark: {
@@ -59,7 +59,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   // Toggle function
-  const toggleTheme = async () => {
+  const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
   };

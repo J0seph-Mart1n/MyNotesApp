@@ -117,7 +117,7 @@ export default function ChatbotScreen() {
                         {isDownloading ? (
                             <View style={styles.progressContainer}>
                                 <Text style={{ color: colors.text }}>Downloading: {(downloadProgress * 100).toFixed(1)}%</Text>
-                                <View style={styles.progressBarBg}>
+                                <View style={[styles.progressBarBg, { backgroundColor: colors.border }]}>
                                     <View style={[styles.progressBarFill, { width: `${downloadProgress * 100}%`, backgroundColor: colors.green }]} />
                                 </View>
                             </View>
@@ -142,9 +142,9 @@ export default function ChatbotScreen() {
                                 <View key={idx} style={[
                                     styles.messageBubble, 
                                     msg.role === 'user' ? styles.userBubble : styles.aiBubble,
-                                    msg.role === 'user' ? { backgroundColor: colors.green } : { backgroundColor: '#333' }
+                                    msg.role === 'user' ? { backgroundColor: colors.green } : { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border }
                                 ]}>
-                                    <Text style={styles.messageText}>{msg.text}</Text>
+                                    <Text style={[styles.messageText, msg.role === 'user' ? { color: '#ffffff' } : { color: colors.text }]}>{msg.text}</Text>
                                 </View>
                             ))}
                             {isGenerating && (
@@ -154,18 +154,19 @@ export default function ChatbotScreen() {
                         
                         <View style={[
                             styles.inputContainer, 
+                            { backgroundColor: colors.background, borderTopColor: colors.border },
                             Platform.OS === 'android' && { paddingBottom: keyboardHeight > 0 ? keyboardHeight + 24 : 24 }
                         ]}>
                             <TextInput
-                                style={[styles.input, { color: colors.text, borderColor: '#444' }]}
+                                style={[styles.input, { color: colors.text, borderColor: colors.border, backgroundColor: colors.inputBg }]}
                                 placeholder="Ask something..."
-                                placeholderTextColor="#888"
+                                placeholderTextColor={colors.placeholder}
                                 value={inputText}
                                 onChangeText={setInputText}
                                 onSubmitEditing={handleSend}
                             />
                             <TouchableOpacity 
-                                style={[styles.sendBtn, { backgroundColor: inputText.trim() && !isGenerating ? colors.green : '#555' }]} 
+                                style={[styles.sendBtn, { backgroundColor: inputText.trim() && !isGenerating ? colors.green : colors.border }]} 
                                 onPress={handleSend}
                                 disabled={!inputText.trim() || isGenerating}
                             >
@@ -233,7 +234,6 @@ const styles = StyleSheet.create({
     progressBarBg: {
         width: '100%',
         height: 12,
-        backgroundColor: '#333',
         borderRadius: 6,
         marginTop: 8,
         overflow: 'hidden',
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 4,
     },
     messageText: {
-        color: '#fff',
         fontSize: 15,
         lineHeight: 22,
     },
@@ -277,9 +276,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 12,
         paddingBottom: 24,
-        backgroundColor: '#1a1a1a',
         borderTopWidth: 1,
-        borderTopColor: '#333',
     },
     input: {
         flex: 1,

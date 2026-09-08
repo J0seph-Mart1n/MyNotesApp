@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
 import { Animated, BackHandler, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '@/hooks/ThemeContext';
 
 type NoteEditorOverlayProps = {
   selectedNote: { id: string; title: string; content: string } | null;
@@ -22,6 +23,7 @@ export default function NoteEditorOverlay({
   onClose,
   contentPlaceholder = 'Note',
 }: NoteEditorOverlayProps) {
+  const { colors } = useTheme();
   const openAnimation = useRef(new Animated.Value(0)).current;
   const onCloseRef = useRef(onClose);
 
@@ -74,6 +76,7 @@ export default function NoteEditorOverlay({
         StyleSheet.absoluteFill,
         styles.editorOverlay,
         {
+          backgroundColor: colors.background,
           opacity: openAnimation,
           transform: [
             {
@@ -89,7 +92,7 @@ export default function NoteEditorOverlay({
       <SafeAreaView style={styles.editorSafeArea}>
         <View style={styles.editorHeader}>
           <TouchableOpacity onPress={handleClose} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={28} color="#ffffff" />
+            <Ionicons name="arrow-back" size={28} color={colors.text} />
           </TouchableOpacity>
         </View>
 
@@ -98,19 +101,19 @@ export default function NoteEditorOverlay({
           style={styles.editorBody}
         >
           <TextInput
-            style={styles.editorTitleInput}
+            style={[styles.editorTitleInput, { color: colors.text }]}
             value={editTitle}
             onChangeText={setEditTitle}
             placeholder="Title"
-            placeholderTextColor="#808080"
+            placeholderTextColor={colors.placeholder || '#808080'}
             multiline
           />
           <TextInput
-            style={styles.editorContentInput}
+            style={[styles.editorContentInput, { color: colors.text }]}
             value={editContent}
             onChangeText={setEditContent}
             placeholder={contentPlaceholder}
-            placeholderTextColor="#808080"
+            placeholderTextColor={colors.placeholder || '#808080'}
             multiline
             scrollEnabled
             textAlignVertical="top"
@@ -123,7 +126,6 @@ export default function NoteEditorOverlay({
 
 const styles = StyleSheet.create({
   editorOverlay: {
-    backgroundColor: '#121212',
     zIndex: 100,
   },
   editorSafeArea: {
@@ -145,13 +147,11 @@ const styles = StyleSheet.create({
   },
   editorTitleInput: {
     fontSize: 28,
-    color: '#ffffff',
     fontWeight: '600',
     marginBottom: 16,
   },
   editorContentInput: {
     fontSize: 18,
-    color: '#e0e0e0',
     lineHeight: 28,
     flex: 1,
   },

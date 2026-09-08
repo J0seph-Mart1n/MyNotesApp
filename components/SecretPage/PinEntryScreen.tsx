@@ -50,7 +50,7 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <PageHeader title={title} navigation={navigation}/>
 
       <View style={styles.contentContainer}>
@@ -87,7 +87,7 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title
         {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((num) => (
           <TouchableOpacity
             key={num}
-            style={styles.numButton}
+            style={[styles.numButton, { backgroundColor: colors.card, borderColor: colors.border }]}
             activeOpacity={0.7}
             onPress={() => handlePress(num)}
           >
@@ -98,7 +98,7 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title
         {/* Bottom Row */}
         <View style={[styles.numButton, { backgroundColor: 'transparent', borderWidth: 0 }]} />
         <TouchableOpacity
-          style={styles.numButton}
+          style={[styles.numButton, { backgroundColor: colors.card, borderColor: colors.border }]}
           activeOpacity={0.7}
           onPress={() => handlePress('0')}
         >
@@ -113,9 +113,9 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={onForgotPin} style={styles.forgotButton}>
-        <Text style={[styles.forgotButtonText, { color: colors.text }]}>Forgot PIN?</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={onForgotPin} style={styles.forgotButton}>
+          <Text style={[styles.forgotButtonText, { color: colors.text }]}>Forgot PIN?</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -124,7 +124,6 @@ export default function PinEntryScreen({ actualPin, onUnlock, onForgotPin, title
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
   header: {
     paddingTop: 60,
@@ -139,7 +138,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#ffffff',
   },
   contentContainer: {
     flex: 1,
@@ -150,7 +148,6 @@ const styles = StyleSheet.create({
   promptTitle: {
     fontSize: 28,
     fontWeight: '600',
-    color: '#ffffff',
     marginBottom: 40,
   },
   dotsContainer: {
@@ -176,11 +173,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#1f1f1f',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2c2c2c',
     marginBottom: 10,
   },
   numText: {

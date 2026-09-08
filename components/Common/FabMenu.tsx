@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '@/hooks/ThemeContext';
 
 type FabMenuProps = {
   onNewNote?: () => void;
@@ -8,6 +9,7 @@ type FabMenuProps = {
 };
 
 export default function FabMenu({ onNewNote, onNewListNote }: FabMenuProps) {
+  const { colors } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const animation = useRef(new Animated.Value(0)).current; // Background and FAB rotation
   const b1 = useRef(new Animated.Value(0)).current; // Drawing (top)
@@ -73,9 +75,9 @@ export default function FabMenu({ onNewNote, onNewListNote }: FabMenuProps) {
             ]
           }
         ]}>
-          <TouchableOpacity style={styles.bubbleItem}>
-            <Ionicons name="brush-outline" size={20} color="#fff" />
-            <Text style={styles.menuItemText}>Drawing</Text>
+          <TouchableOpacity style={[styles.bubbleItem, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Ionicons name="brush-outline" size={20} color={colors.text} />
+            <Text style={[styles.menuItemText, { color: colors.text }]}>Drawing</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -89,14 +91,14 @@ export default function FabMenu({ onNewNote, onNewListNote }: FabMenuProps) {
           }
         ]}>
           <TouchableOpacity
-            style={styles.bubbleItem}
+            style={[styles.bubbleItem, { backgroundColor: colors.card, borderColor: colors.border }]}
             onPress={() => {
               toggleMenu();
               if (onNewListNote) onNewListNote();
             }}
           >
-            <Ionicons name="list-outline" size={20} color="#fff" />
-            <Text style={styles.menuItemText}>List</Text>
+            <Ionicons name="list-outline" size={20} color={colors.text} />
+            <Text style={[styles.menuItemText, { color: colors.text }]}>List</Text>
           </TouchableOpacity>
         </Animated.View>
 
@@ -110,20 +112,20 @@ export default function FabMenu({ onNewNote, onNewListNote }: FabMenuProps) {
           }
         ]}>
           <TouchableOpacity
-            style={styles.bubbleItem}
+            style={[styles.bubbleItem, { backgroundColor: colors.card, borderColor: colors.border }]}
             onPress={() => {
               toggleMenu();
               if (onNewNote) onNewNote();
             }}
           >
-            <Ionicons name="document-text-outline" size={20} color="#fff" />
-            <Text style={styles.menuItemText}>Notes</Text>
+            <Ionicons name="document-text-outline" size={20} color={colors.text} />
+            <Text style={[styles.menuItemText, { color: colors.text }]}>Notes</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
 
       <TouchableOpacity
-        style={styles.fab}
+        style={[styles.fab, { backgroundColor: colors.green }]}
         activeOpacity={0.8}
         onPress={toggleMenu}
       >
@@ -135,7 +137,7 @@ export default function FabMenu({ onNewNote, onNewListNote }: FabMenuProps) {
             })
           }]
         }}>
-          <Ionicons name="add" size={32} color="#121212" />
+          <Ionicons name="add" size={32} color={'#ffffff'} />
         </Animated.View>
       </TouchableOpacity>
     </>
@@ -150,7 +152,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#a8c7fa',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
@@ -174,12 +175,10 @@ const styles = StyleSheet.create({
   bubbleItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1f1f1f',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#2c2c2c',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -187,7 +186,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   menuItemText: {
-    color: '#fff',
     fontSize: 16,
     marginLeft: 12,
     fontWeight: '500',

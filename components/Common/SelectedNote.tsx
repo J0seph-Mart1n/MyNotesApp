@@ -49,6 +49,5 @@ const styles = StyleSheet.create({
     appTitle: {
         fontSize: 32,
         fontWeight: '700',
-        color: '#ffffff',
     },
 })

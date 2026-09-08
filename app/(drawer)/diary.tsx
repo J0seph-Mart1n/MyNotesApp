@@ -16,7 +16,6 @@ import FabMenu from '@/components/Common/FabMenu';
 import { useTheme } from '@/hooks/ThemeContext';
 import { useFocusEffect, useNavigation } from 'expo-router';
 import PageHeader from '@/components/Common/PageHeader';
-import { DiaryColors } from '@/constants/Colors';
 import CalenderPicker from '@/components/DiaryPage/CalenderPicker';
 import { useDiaryHandles, DiaryEntry } from '@/functions/DiaryHandles';
 import NoteEditorOverlay from '@/components/Common/NoteEditorOverlay';
@@ -78,7 +77,7 @@ export default function DiaryScreen() {
 
           <View style={styles.entriesGrid}>
             {entries.length === 0 ? (
-              <Text style={{ color: DiaryColors.onSurfaceVariant, textAlign: 'center', marginTop: 40 }}>
+              <Text style={{ color: colors.subText, textAlign: 'center', marginTop: 40 }}>
                 No entries for this date.
               </Text>
             ) : (
@@ -105,13 +104,17 @@ export default function DiaryScreen() {
                     }} 
                     onLongPress={() => setShowDeleteFor(entry.id)}
                     key={entry.id} 
-                    style={[styles.entryCard, showDeleteFor === entry.id && { borderColor: 'rgba(255, 107, 107, 0.5)', borderWidth: 1 }]}
+                    style={[
+                      styles.entryCard, 
+                      { backgroundColor: colors.card, borderColor: colors.border },
+                      showDeleteFor === entry.id && { borderColor: 'rgba(255, 107, 107, 0.5)', borderWidth: 1 }
+                    ]}
                   >
                     <View style={styles.entryHeader}>
                       <View style={styles.entryHeaderLeft}>
                         <View>
-                          <Text style={styles.entryTitle}>{entry.title || "Untitled"}</Text>
-                          <Text style={styles.entryDate}>{entryTime}</Text>
+                          <Text style={[styles.entryTitle, { color: colors.text }]}>{entry.title || "Untitled"}</Text>
+                          <Text style={[styles.entryDate, { color: colors.subText }]}>{entryTime}</Text>
                         </View>
                       </View>
                       {showDeleteFor === entry.id && (
@@ -126,7 +129,7 @@ export default function DiaryScreen() {
                       )}
                     </View>
 
-                    <Text style={styles.entrySnippet} numberOfLines={5}>{previewContent}</Text>
+                    <Text style={[styles.entrySnippet, { color: colors.subText }]} numberOfLines={5}>{previewContent}</Text>
                   </TouchableOpacity>
                 );
               })
@@ -164,7 +167,6 @@ export default function DiaryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DiaryColors.surface,
   },
   scrollContent: {
     paddingTop: 20,
@@ -178,8 +180,6 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   entryCard: {
-    backgroundColor: '#1f1f1f',
-    borderColor: '#2c2c2c',
     borderWidth: 1,
     borderRadius: 24,
     padding: 24,
@@ -198,17 +198,14 @@ const styles = StyleSheet.create({
   entryTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#ffffff',
     marginBottom: 4,
   },
   entryDate: {
     fontSize: 13,
-    color: '#a0a0a0',
   },
   entrySnippet: {
     fontSize: 15,
     lineHeight: 24,
-    color: '#d0d0d0',
     marginBottom: 8,
   },
 });

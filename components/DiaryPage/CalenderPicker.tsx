@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { Calendar } from 'react-native-calendars';
 import { MaterialIcons } from "@expo/vector-icons";
-import { DiaryColors } from "@/constants/Colors";
+import { useTheme } from '@/hooks/ThemeContext';
 
 interface CalenderPickerProps {
     date: Date;
@@ -10,6 +10,7 @@ interface CalenderPickerProps {
 }
 
 export default function CalenderPicker({ date, onChange }: CalenderPickerProps) {
+    const { colors, theme } = useTheme();
     const [pickerVisible, setPickerVisible] = useState(false);
     const [tempYear, setTempYear] = useState(date.getFullYear());
 
@@ -47,16 +48,16 @@ export default function CalenderPicker({ date, onChange }: CalenderPickerProps) 
         <View style={styles.section}>
             <View style={styles.calendarHeader}>
                 <View>
-                    <Text style={styles.timelineLabel}>TIMELINE</Text>
-                    <Text style={styles.monthTitle}>
+                    <Text style={[styles.timelineLabel, { color: colors.subText }]}>TIMELINE</Text>
+                    <Text style={[styles.monthTitle, { color: colors.text }]}>
                         {date.toLocaleDateString(undefined, { day: '2-digit', month: 'long', year: 'numeric' })}
                     </Text>
                 </View>
             </View>
 
-            <View style={styles.calendarContainer}>
+            <View style={[styles.calendarContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
                 <Calendar
-                    key={monthYearKey}
+                    key={`${monthYearKey}-${theme}`}
                     current={dateString}
                     onDayPress={onDayPress}
                     onMonthChange={onMonthChange}
@@ -64,7 +65,7 @@ export default function CalenderPicker({ date, onChange }: CalenderPickerProps) 
                         <MaterialIcons 
                             name={direction === 'left' ? 'chevron-left' : 'chevron-right'} 
                             size={24} 
-                            color={DiaryColors.primary} 
+                            color={colors.green} 
                         />
                     )}
                     renderHeader={(calendarDate: any) => {
@@ -82,27 +83,27 @@ export default function CalenderPicker({ date, onChange }: CalenderPickerProps) 
                                 style={styles.calendarMonthHeaderButton}
                                 onPress={() => { setTempYear(headerDate.getFullYear()); setPickerVisible(true); }}
                             >
-                                <Text style={styles.calendarMonthHeaderText}>
+                                <Text style={[styles.calendarMonthHeaderText, { color: colors.text }]}>
                                     {headerDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
                                 </Text>
-                                <MaterialIcons name="arrow-drop-down" size={20} color={DiaryColors.text} />
+                                <MaterialIcons name="arrow-drop-down" size={20} color={colors.text} />
                             </TouchableOpacity>
                         );
                     }}
                     markedDates={{
-                        [dateString]: { selected: true, selectedColor: DiaryColors.primary, selectedTextColor: DiaryColors.surfaceContainerLowest }
+                        [dateString]: { selected: true, selectedColor: colors.green, selectedTextColor: '#ffffff' }
                     }}
                     theme={{
                         backgroundColor: 'transparent',
                         calendarBackground: 'transparent',
-                        textSectionTitleColor: DiaryColors.onSurfaceVariant,
-                        selectedDayBackgroundColor: DiaryColors.primary,
-                        selectedDayTextColor: DiaryColors.surfaceContainerLowest,
-                        todayTextColor: DiaryColors.primary,
-                        dayTextColor: DiaryColors.text,
-                        textDisabledColor: '#444',
-                        arrowColor: DiaryColors.primary,
-                        monthTextColor: DiaryColors.text,
+                        textSectionTitleColor: colors.subText,
+                        selectedDayBackgroundColor: colors.green,
+                        selectedDayTextColor: '#ffffff',
+                        todayTextColor: colors.green,
+                        dayTextColor: colors.text,
+                        textDisabledColor: colors.border,
+                        arrowColor: colors.green,
+                        monthTextColor: colors.text,
                         textMonthFontWeight: 'bold',
                         textDayFontWeight: '500',
                     }}
@@ -111,14 +112,14 @@ export default function CalenderPicker({ date, onChange }: CalenderPickerProps) 
 
             <Modal visible={pickerVisible} transparent animationType="fade">
                 <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
+                    <View style={[styles.modalContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
                         <View style={styles.yearSelector}>
                             <TouchableOpacity onPress={() => setTempYear(y => y - 1)} style={styles.yearArrow}>
-                                <MaterialIcons name="chevron-left" size={32} color={DiaryColors.primary} />
+                                <MaterialIcons name="chevron-left" size={32} color={colors.green} />
                             </TouchableOpacity>
-                            <Text style={styles.yearText}>{tempYear}</Text>
+                            <Text style={[styles.yearText, { color: colors.text }]}>{tempYear}</Text>
                             <TouchableOpacity onPress={() => setTempYear(y => y + 1)} style={styles.yearArrow}>
-                                <MaterialIcons name="chevron-right" size={32} color={DiaryColors.primary} />
+                                <MaterialIcons name="chevron-right" size={32} color={colors.green} />
                             </TouchableOpacity>
                         </View>
                         
@@ -128,16 +129,16 @@ export default function CalenderPicker({ date, onChange }: CalenderPickerProps) 
                                 return (
                                     <TouchableOpacity 
                                         key={m} 
-                                        style={[styles.monthCell, isSelected && styles.monthCellSelected]}
+                                        style={[styles.monthCell, isSelected && { backgroundColor: colors.green }]}
                                         onPress={() => handleMonthSelect(i)}
                                     >
-                                        <Text style={[styles.monthCellText, isSelected && styles.monthCellTextSelected]}>{m}</Text>
+                                        <Text style={[styles.monthCellText, { color: colors.text }, isSelected && { color: '#ffffff', fontWeight: 'bold' }]}>{m}</Text>
                                     </TouchableOpacity>
                                 );
                             })}
                         </View>
                         <TouchableOpacity style={styles.closeModalButton} onPress={() => setPickerVisible(false)}>
-                            <Text style={styles.closeModalText}>Cancel</Text>
+                            <Text style={[styles.closeModalText, { color: colors.green }]}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -156,7 +157,6 @@ const styles = StyleSheet.create({
     timelineLabel: {
         fontSize: 11,
         fontWeight: '600',
-        color: DiaryColors.text,
         textTransform: 'uppercase',
         letterSpacing: 1,
         marginBottom: 4,
@@ -164,15 +164,12 @@ const styles = StyleSheet.create({
     monthTitle: {
         fontSize: 32,
         fontWeight: '700',
-        color: DiaryColors.text,
         letterSpacing: -0.5,
     },
     calendarContainer: {
-        backgroundColor: '#1f1f1f',
         borderRadius: 24,
         padding: 8,
         borderWidth: 1,
-        borderColor: '#2c2c2c',
     },
     calendarMonthHeaderButton: {
         flexDirection: 'row',
@@ -182,7 +179,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
     },
     calendarMonthHeaderText: {
-        color: DiaryColors.text,
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -194,13 +190,11 @@ const styles = StyleSheet.create({
         padding: 24,
     },
     modalContent: {
-        backgroundColor: '#1f1f1f',
         borderRadius: 24,
         padding: 24,
         width: '100%',
         maxWidth: 400,
         borderWidth: 1,
-        borderColor: '#2c2c2c',
     },
     yearSelector: {
         flexDirection: 'row',
@@ -214,7 +208,6 @@ const styles = StyleSheet.create({
     yearText: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: DiaryColors.text,
     },
     monthsGrid: {
         flexDirection: 'row',
@@ -229,17 +222,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: 'transparent',
     },
-    monthCellSelected: {
-        backgroundColor: DiaryColors.primary,
-    },
     monthCellText: {
-        color: DiaryColors.text,
         fontSize: 16,
         fontWeight: '500',
-    },
-    monthCellTextSelected: {
-        color: DiaryColors.surfaceContainerLowest,
-        fontWeight: 'bold',
     },
     closeModalButton: {
         marginTop: 32,
@@ -247,7 +232,6 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     closeModalText: {
-        color: DiaryColors.primary,
         fontSize: 16,
         fontWeight: 'bold',
     },

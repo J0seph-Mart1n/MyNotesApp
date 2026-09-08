@@ -104,7 +104,7 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {selectedNoteIds.length > 0 ? (
         <SelectedNote
           selectedNoteIds={selectedNoteIds}
@@ -187,7 +187,6 @@ export default function NotesListScreen({ title, isSecret, contentPlaceholder }:
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
   },
   searchContainer: {
     flexDirection: 'row',

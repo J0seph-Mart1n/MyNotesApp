@@ -109,17 +109,17 @@ export default function ListNoteOverlay({
                 style={[
                     styles.taskInput,
                     { color: colors.text },
-                    item.isCompleted && styles.completedTaskText // Strkethrough if done!
+                    item.isCompleted && { textDecorationLine: 'line-through', color: colors.subText } 
                 ]}
                 value={item.text}
                 onChangeText={(text) => updateTaskText(item.id, text)}
                 placeholder="List item"
-                placeholderTextColor="#808080"
+                placeholderTextColor={colors.placeholder || '#808080'}
             />
 
             {/* Delete Task Button */}
             <TouchableOpacity onPress={() => removeTask(item.id)} style={styles.deleteButton}>
-                <Ionicons name="close-circle" size={20} color="#666" />
+                <Ionicons name="close-circle" size={20} color={colors.subText || '#666'} />
             </TouchableOpacity>
         </View>
     );
@@ -132,6 +132,7 @@ export default function ListNoteOverlay({
                 StyleSheet.absoluteFill,
                 styles.editorOverlay,
                 {
+                    backgroundColor: colors.background,
                     opacity: openAnimation,
                     transform: [
                         { scale: openAnimation.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) },
@@ -143,18 +144,18 @@ export default function ListNoteOverlay({
                 {/* Header */}
                 <View style={styles.editorHeader}>
                     <TouchableOpacity onPress={handleClose} style={styles.backButton}>
-                        <Ionicons name="arrow-back" size={28} color="#ffffff" />
+                        <Ionicons name="arrow-back" size={28} color={colors.text} />
                     </TouchableOpacity>
                 </View>
 
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.editorBody}>
                     {/* Title Input */}
                     <TextInput
-                        style={styles.editorTitleInput}
+                        style={[styles.editorTitleInput, { color: colors.text }]}
                         value={listTitle}
                         onChangeText={setListTitle}
                         placeholder="Title"
-                        placeholderTextColor="#808080"
+                        placeholderTextColor={colors.placeholder || '#808080'}
                     />
 
                     {/* List of Tasks */}
@@ -164,7 +165,7 @@ export default function ListNoteOverlay({
                         renderItem={renderTask}
                         contentContainerStyle={styles.taskList}
                         ListFooterComponent={
-                            <TouchableOpacity style={styles.addTaskButton} onPress={addTask}>
+                            <TouchableOpacity style={[styles.addTaskButton, { borderTopColor: colors.border }]} onPress={addTask}>
                                 <Ionicons name="add" size={24} color={colors.text} />
                                 <Text style={[styles.addTaskText, { color: colors.text }]}>Add Item</Text>
                             </TouchableOpacity>
@@ -178,7 +179,6 @@ export default function ListNoteOverlay({
 
 const styles = StyleSheet.create({
     editorOverlay: {
-        backgroundColor: '#121212',
         zIndex: 100, // Brings it to front over menus
     },
     editorSafeArea: { flex: 1 },
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
     editorBody: { flex: 1, paddingHorizontal: 20 },
     editorTitleInput: {
         fontSize: 28,
-        color: '#ffffff',
         fontWeight: '600',
         marginBottom: 24,
     },
@@ -215,7 +214,6 @@ const styles = StyleSheet.create({
     },
     completedTaskText: {
         textDecorationLine: 'line-through',
-        color: '#808080',
     },
     deleteButton: { padding: 4, marginLeft: 8 },
     addTaskButton: {
@@ -223,7 +221,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 12,
         borderTopWidth: 1,
-        borderTopColor: '#2c2c2c',
         marginTop: 8,
     },
     addTaskText: {
