@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform, Keyboard, ToastAndroid } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/hooks/ThemeContext';
 import PinProtectedScreen from '@/components/SecretPage/PinProtectedScreen';
@@ -100,6 +101,13 @@ export default function ChatbotScreen() {
         }
     };
 
+    const handleCopy = async (text: string) => {
+        await Clipboard.setStringAsync(text);
+        if (Platform.OS === 'android') {
+            ToastAndroid.show("Copied to clipboard", ToastAndroid.SHORT);
+        }
+    };
+
     if (modelExists === null) return null;
 
     const innerContent = (
@@ -145,6 +153,15 @@ export default function ChatbotScreen() {
                                     msg.role === 'user' ? { backgroundColor: colors.green } : { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border }
                                 ]}>
                                     <Text style={[styles.messageText, msg.role === 'user' ? { color: '#ffffff' } : { color: colors.text }]}>{msg.text}</Text>
+                                    {msg.role === 'assistant' && msg.text.length > 0 && (
+                                        <TouchableOpacity 
+                                            onPress={() => handleCopy(msg.text)} 
+                                            style={styles.copyButton}
+                                        >
+                                            <Ionicons name="copy-outline" size={16} color={colors.subText} />
+                                            <Text style={[styles.copyText, { color: colors.subText }]}>Copy</Text>
+                                        </TouchableOpacity>
+                                    )}
                                 </View>
                             ))}
                             {isGenerating && (
@@ -271,6 +288,20 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 15,
         lineHeight: 22,
+    },
+    copyButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        marginTop: 12,
+        paddingTop: 8,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: '#55555555',
+        width: '100%',
+    },
+    copyText: {
+        fontSize: 12,
+        marginLeft: 6,
     },
     inputContainer: {
         flexDirection: 'row',

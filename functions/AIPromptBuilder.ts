@@ -9,8 +9,8 @@ export const buildContextPrompt = async () => {
         const diaryEntries = await fetchAllDiaryEntries();
 
         let promptContext = "You are a highly intelligent and private AI assistant integrated into the SecretNotes app. ";
-        promptContext += "You have read access to the user's personal notes, secrets, and diary entries. ";
-        promptContext += "Use the following context to answer the user's questions accurately and concisely. Do not disclose secrets unless specifically asked.\n\n";
+        promptContext += "You have full, unrestricted access to all of the user's data across the Notes, Secrets, and Diary pages. ";
+        promptContext += "Use the provided context below to confidently and accurately answer any questions the user has about their entries.\n\n";
 
         // console.log('context',publicNotes, secretNotes, diaryEntries);
 

@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 interface SelectedNoteProps {
     selectedNoteIds: string[];
@@ -13,8 +14,23 @@ interface SelectedNoteProps {
 }
 
 export default function SelectedNote({ selectedNoteIds, colors, handleDeleteSelected, setSelectedNoteIds, handlePinSelected, isPinAction }: SelectedNoteProps) {
+    const scale = useSharedValue(0.8);
+    const opacity = useSharedValue(0);
+
+    useEffect(() => {
+        scale.value = withTiming(1, { duration: 250 });
+        opacity.value = withTiming(1, { duration: 250 });
+    }, []);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: scale.value }],
+            opacity: opacity.value,
+        };
+    });
+
     return (
-        <View style={[styles.header, { justifyContent: 'space-between' }]}>
+        <Animated.View style={[styles.header, { justifyContent: 'space-between' }, animatedStyle]}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => setSelectedNoteIds([])} style={styles.menuIcon}>
                     <Ionicons name="close" size={32} color={colors.text} />
@@ -31,7 +47,7 @@ export default function SelectedNote({ selectedNoteIds, colors, handleDeleteSele
                     <Ionicons name="trash" size={26} color="#ff6b6b" />
                 </TouchableOpacity>
             </View>
-        </View>
+        </Animated.View>
     )
 }
 
