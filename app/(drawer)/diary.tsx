@@ -28,7 +28,6 @@ export default function DiaryScreen() {
   const navigation = useNavigation();
 
   const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
 
   const {
     entries,
@@ -53,9 +52,8 @@ export default function DiaryScreen() {
     }, [date])
   );
 
-  const onChange = (event: any, selectedDate?: Date) => {
-    setShowPicker(Platform.OS === 'ios');
-    if (selectedDate) setDate(selectedDate);
+  const onDateSelect = (selectedDate: Date) => {
+    setDate(selectedDate);
   };
 
   return (
@@ -71,7 +69,7 @@ export default function DiaryScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Calendar Section */}
-        <CalenderPicker date={date} showPicker={showPicker} setShowPicker={setShowPicker} onChange={onChange} />
+        <CalenderPicker date={date} onChange={onDateSelect} />
 
         {/* Journal Entries Section */}
         <View style={styles.section}>
