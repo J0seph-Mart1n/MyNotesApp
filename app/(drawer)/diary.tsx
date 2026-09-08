@@ -9,6 +9,7 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
+import Animated, { ZoomIn, ZoomOut } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import FabMenu from '@/components/Common/FabMenu';
@@ -28,6 +29,7 @@ export default function DiaryScreen() {
   const navigation = useNavigation();
 
   const [date, setDate] = useState(new Date());
+  const [showDeleteFor, setShowDeleteFor] = useState<string | null>(null);
 
   const {
     entries,
@@ -92,7 +94,19 @@ export default function DiaryScreen() {
                 const entryTime = new Date(entry.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
                 return (
-                  <TouchableOpacity activeOpacity={0.9} onPress={() => handleOpenNote(entry)} key={entry.id} style={styles.entryCard}>
+                  <TouchableOpacity 
+                    activeOpacity={0.9} 
+                    onPress={() => {
+                        if (showDeleteFor !== null) {
+                            setShowDeleteFor(null);
+                        } else {
+                            handleOpenNote(entry);
+                        }
+                    }} 
+                    onLongPress={() => setShowDeleteFor(entry.id)}
+                    key={entry.id} 
+                    style={[styles.entryCard, showDeleteFor === entry.id && { borderColor: 'rgba(255, 107, 107, 0.5)', borderWidth: 1 }]}
+                  >
                     <View style={styles.entryHeader}>
                       <View style={styles.entryHeaderLeft}>
                         <View>
@@ -100,9 +114,16 @@ export default function DiaryScreen() {
                           <Text style={styles.entryDate}>{entryTime}</Text>
                         </View>
                       </View>
-                      <TouchableOpacity onPress={() => handleDeleteEntry(entry.id)}>
-                        <MaterialIcons name="delete-outline" size={24} color="#ff6b6b" />
-                      </TouchableOpacity>
+                      {showDeleteFor === entry.id && (
+                          <Animated.View entering={ZoomIn.springify()} exiting={ZoomOut}>
+                              <TouchableOpacity 
+                                onPress={() => { handleDeleteEntry(entry.id); setShowDeleteFor(null); }}
+                                style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)', padding: 8, borderRadius: 20 }}
+                              >
+                                <MaterialIcons name="delete-outline" size={24} color="#ff6b6b" />
+                              </TouchableOpacity>
+                          </Animated.View>
+                      )}
                     </View>
 
                     <Text style={styles.entrySnippet} numberOfLines={5}>{previewContent}</Text>
